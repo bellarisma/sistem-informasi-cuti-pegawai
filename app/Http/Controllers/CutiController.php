@@ -20,11 +20,11 @@ class CutiController extends Controller
         // 1. JIKA LOGIN SEBAGAI ADMIN (Melihat semua pengajuan masuk)
         if ($user->role === 'admin') {
             // Mengambil semua data pengajuan cuti beserta data pegawainya (Eager Loading)
-            $daftarCuti = PengajuanCuti::with('user')
+            $pengajuanCuti = PengajuanCuti::with('user')
                                         ->orderBy('created_at', 'desc')
                                         ->get();
 
-            return view('cuti.admin_index', compact('daftarCuti'));
+            return view('cuti.admin_index', compact('pengajuanCuti'));
         }
 
         // 2. JIKA LOGIN SEBAGAI PEGAWAI (Melihat data sendiri & Form Pengajuan)
@@ -88,7 +88,8 @@ class CutiController extends Controller
             'tanggal_selesai' => $request->tanggal_selesai,
             'alasan'          => $request->alasan,
             'status'          => 'pending', // Default awal pasti pending
-        ]);
+            'jml_hari_cuti'   => $jumlahHari,
+            ]);
 
         return redirect()->route('cuti.index')
             ->with('success', 'Pengajuan cuti berhasil dikirim! Silakan tunggu konfirmasi dari Admin.');

@@ -19,9 +19,15 @@ class DashboardController extends Controller
             // Hanya menghitung user yang rolenya 'pegawai' (Admin tidak dihitung)
             $totalPegawai = User::where('role', 'pegawai')->count(); 
             
-            $totalPengajuanCuti = PengajuanCuti::count();
+            $totalCuti = PengajuanCuti::count();
             $totalPending = PengajuanCuti::where('status', 'pending')->count();
-            
+
+            //Menghitung total divisi dari tabel user
+            //ambil kolom divisi lalu jumlah unik (distinct)  
+            $totalUnitKerja = User::where('role', 'pegawai')
+                                  ->distinct('divisi')
+                                  ->count('divisi');
+
             // Mengambil 5 pegawai terbaru yang baru didaftarkan
             $pegawaiTerbaru = User::where('role', 'pegawai')
                                   ->orderBy('created_at', 'desc')
@@ -30,8 +36,9 @@ class DashboardController extends Controller
 
             return view('dashboard.admin', compact(
                 'totalPegawai', 
-                'totalPengajuanCuti', 
+                'totalCuti', 
                 'totalPending', 
+                'totalUnitKerja',
                 'pegawaiTerbaru'
             ));
         }

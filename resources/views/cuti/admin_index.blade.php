@@ -58,39 +58,37 @@
                 @if(auth()->user()->role === 'admin')
                     <td style="padding: 12px; text-align: center; color: #475569;">{{ $cuti->user->sisa_jatah_cuti }} Hari</td>
                 @endif
+                
                 <td style="padding: 12px; text-align: center;">
-                    @if($cuti->status === 'Pending')
-                        <span style="background: #fef3c7; color: #d97706; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">
-                            <i class="fa-solid fa-hourglass-half" style="margin-right: 4px;"></i> Pending
-                        </span>
-                    @elseif($cuti->status === 'Disetujui')
-                        <span style="background: #d1fae5; color: #059669; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">
-                            <i class="fa-solid fa-circle-check" style="margin-right: 4px;"></i> Disetujui
-                        </span>
+                    @if(strtolower($cuti->status) === 'pending')
+                        <span class="badge bg-warning text-dark px-3 py-2 rounded-pill">Pending</span>
+                    @elseif(strtolower($cuti->status) === 'disetujui')
+                        <span class="badge bg-success text-white px-3 py-2 rounded-pill">Disetujui</span>
                     @else
-                        <span style="background: #fee2e2; color: #dc2626; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">
-                            <i class="fa-solid fa-circle-xmark" style="margin-right: 4px;"></i> Ditolak
-                        </span>
+                        <span class="badge bg-danger text-white px-3 py-2 rounded-pill">Ditolak</span>
                     @endif
                 </td>
+
                 @if(auth()->user()->role === 'admin')
                     <td style="padding: 12px;">
                         <div style="display: flex; gap: 8px; justify-content: center; align-items: center;">
-                            @if($cuti->status === 'Pending')
+                            @if(strtolower($cuti->status) === 'pending')
                                 <form action="{{ route('cuti.setujui', $cuti->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menyetujui pengajuan cuti ini?')">
                                     @csrf
-                                    <button type="submit" class="btn-action" style="background: #10b981; color: white; border-color: #10b981;">
+                                    <button type="submit" class="btn-action" style="background: #10b981; color: white; border: 1px solid #10b981; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 500;">
                                         <i class="fa-solid fa-check"></i> Setujui
                                     </button>
                                 </form>
                                 <form action="{{ route('cuti.tolak', $cuti->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menolak pengajuan cuti ini?')">
                                     @csrf
-                                    <button type="submit" class="btn-action btn-action-danger" style="background: #ef4444; color: white; border-color: #ef4444;">
+                                    <button type="submit" class="btn-action" style="background: #ef4444; color: white; border: 1px solid #ef4444; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 500;">
                                         <i class="fa-solid fa-xmark"></i> Tolak
                                     </button>
                                 </form>
                             @else
-                                <span style="color: #94a3b8; font-size: 13px; font-style: italic;">Selesai diproses</span>
+                                <span style="color: #94a3b8; font-size: 13px; font-style: italic;">
+                                    <i class="fa-solid fa-circle-check"></i> Selesai diproses
+                                </span>
                             @endif
                         </div>
                     </td>

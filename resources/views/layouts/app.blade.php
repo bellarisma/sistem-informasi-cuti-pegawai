@@ -306,12 +306,20 @@
         </div>
 
         <ul class="menu">
-            <li><a href="{{ route('dashboard') }}"><i class="fa-solid fa-chart-pie"></i> Dashboard</a></li>
-            <li><a href="{{ route('pegawai.index') }}"><i class="fa-solid fa-users"></i> Pegawai</a></li>
-            <li><a href="{{ route('cuti.index') }}"><i class="fa-solid fa-calendar-check"></i> Cuti</a></li>
-            @if(auth()->user()->role == 'admin')
-            <li><a href="{{ route('laporan.index') }}"><i class="fa-solid fa-file-invoice"></i> Laporan</a></li>
-            @endif
+    <li><a href="{{ route('dashboard') }}"><i class="fa-solid fa-chart-pie"></i> Dashboard</a></li>
+    
+    {{-- KHUSUS ADMIN: Menu Pegawai dikunci di sini --}}
+    @if(auth()->user()->role == 'admin')
+    <li><a href="{{ route('pegawai.index') }}"><i class="fa-solid fa-users"></i> Pegawai</a></li>
+    @endif
+    
+    {{-- Bisa diakses Admin maupun Pegawai --}}
+    <li><a href="{{ route('cuti.index') }}"><i class="fa-solid fa-calendar-check"></i> Cuti</a></li>
+    
+    {{-- KHUSUS ADMIN: Menu Laporan --}}
+    @if(auth()->user()->role == 'admin')
+    <li><a href="{{ route('laporan.index') }}"><i class="fa-solid fa-file-invoice"></i> Laporan</a></li>
+    @endif
             <li>
                 <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                     <i class="fa-solid fa-right-from-bracket"></i> Logout
