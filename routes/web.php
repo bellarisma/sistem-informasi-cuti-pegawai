@@ -24,16 +24,21 @@ Route::middleware(['auth'])->group(function () {
     // 1. Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // 2. Pegawai (CRUD)
+    // 2. Pegawai (CRUD) (admin)
+    Route::middleware(['user-role:admin'])->group(function(){
     Route::get('/pegawai', [PegawaiController::class, 'index'])->name('pegawai.index');
     Route::post('/pegawai', [PegawaiController::class, 'store'])->name('pegawai.store');
     Route::put('/pegawai/{id}', [PegawaiController::class, 'update'])->name('pegawai.update');
     Route::delete('/pegawai/{id}', [PegawaiController::class, 'destroy'])->name('pegawai.destroy');
 
-    // 3. Cuti
-    Route::get('/cuti', [CutiController::class, 'index'])->name('cuti.index');
+    // Fitur approval cuti dari sisi admin
     Route::post('/cuti/{id}/setujui', [CutiController::class, 'setujui'])->name('cuti.setujui');
     Route::post('/cuti/{id}/tolak', [CutiController::class, 'tolak'])->name('cuti.tolak');
+    });
+
+    // 3. Cuti (admin maupun pegawai)
+    Route::get('/cuti', [CutiController::class, 'index'])->name('cuti.index');
+    Route::post('/cuti', [CutiController::class, 'store'])->name('cuti.store');
 
     // 4. Laporan (Hanya Admin yang bisa lihat lewat sidebar)
     Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
