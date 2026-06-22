@@ -73,23 +73,24 @@
                     <td style="padding: 12px;">
                         <div style="display: flex; gap: 8px; justify-content: center; align-items: center;">
                             @if(strtolower($cuti->status) === 'pending')
-                                <form action="{{ route('cuti.setujui', $cuti->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menyetujui pengajuan cuti ini?')">
+                                <form action="{{ route('cuti.setujui', $cuti->id) }}" method="POST" class="form-setujui">
                                     @csrf
-                                    <button type="submit" class="btn-action" style="background: #10b981; color: white; border: 1px solid #10b981; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 500;">
+                                    <button type="button" class="btn-action btn-setujui-swal" style="background: #10b981; color: white; border: 1px solid #10b981; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 500;">
                                         <i class="fa-solid fa-check"></i> Setujui
                                     </button>
                                 </form>
-                                <form action="{{ route('cuti.tolak', $cuti->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menolak pengajuan cuti ini?')">
+
+                                <form action="{{ route('cuti.tolak', $cuti->id) }}" method="POST" class="form-tolak">
                                     @csrf
-                                    <button type="submit" class="btn-action" style="background: #ef4444; color: white; border: 1px solid #ef4444; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 500;">
+                                    <button type="button" class="btn-action btn-tolak-swal" style="background: #ef4444; color: white; border: 1px solid #ef4444; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 500;">
                                         <i class="fa-solid fa-xmark"></i> Tolak
                                     </button>
                                 </form>
                             @else
-                                <span style="color: #94a3b8; font-size: 13px; font-style: italic;">
-                                    <i class="fa-solid fa-circle-check"></i> Selesai diproses
-                                </span>
-                            @endif
+                    <span style="color: #94a3b8; font-size: 13px; font-style: italic;">
+                        <i class="fa-solid fa-circle-check"></i> Selesai diproses
+                    </span>
+             @endif
                         </div>
                     </td>
                 @endif
@@ -109,6 +110,49 @@
 
 @section('scripts')
 <script>
+    document.addEventListener('DOMContentLoaded', function () {
+    // Pop-up untuk tombol Setujui
+    document.querySelectorAll('.btn-setujui-swal').forEach(button => {
+        button.addEventListener('click', function () {
+            const form = this.closest('.form-setujui');
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: "Pengajuan cuti ini akan disetujui dan memotong kuota jatah cuti pegawai!",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#10b981',
+                cancelButtonColor: '#64748b',
+                confirmButtonText: 'Ya, Setujui!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit(); // Jalankan submit form jika klik Ya
+                }
+            });
+        });
+    });
+
+    // Pop-up untuk tombol Tolak
+    document.querySelectorAll('.btn-tolak-swal').forEach(button => {
+        button.addEventListener('click', function () {
+            const form = this.closest('.form-tolak');
+            Swal.fire({
+                title: 'Tolak Pengajuan Cuti?',
+                text: "Apakah Anda yakin ingin menolak permohonan cuti pegawai ini?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#64748b',
+                confirmButtonText: 'Ya, Tolak!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        });
+    });
+});
     // Penanganan transisi alert secara halus
     const successAlert = document.getElementById('success-alert');
     const errorAlert = document.getElementById('error-alert');

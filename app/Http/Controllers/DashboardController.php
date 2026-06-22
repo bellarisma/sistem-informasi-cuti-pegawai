@@ -15,37 +15,33 @@ class DashboardController extends Controller
 
         // 1. JIKA YANG LOGIN ADALAH ADMIN
         if ($user->role === 'admin') {
-            // Mengambil data statistik untuk dashboard admin
-            // Hanya menghitung user yang rolenya 'pegawai' (Admin tidak dihitung)
+            // Statistik Cards
             $totalPegawai = User::where('role', 'pegawai')->count(); 
-            
-            $totalCuti = PengajuanCuti::count();
             $totalPending = PengajuanCuti::where('status', 'pending')->count();
-
-            //Menghitung total divisi dari tabel user
-            //ambil kolom divisi lalu jumlah unik (distinct)  
+            
+            // Menghitung total divisi aktif dari pegawai yang ada
             $totalUnitKerja = User::where('role', 'pegawai')
+                                  ->whereNotNull('divisi')
                                   ->distinct('divisi')
                                   ->count('divisi');
 
-            // Mengambil 5 pegawai terbaru yang baru didaftarkan
-            $pegawaiTerbaru = User::where('role', 'pegawai')
-                                  ->orderBy('created_at', 'desc')
-                                  ->take(5)
-                                  ->get();
+            // Mengambil 5 pengajuan CUTI terbaru (Eager Loading dengan user agar tidak null)
+            $cutiTerbaru = PengajuanCuti::with('user')
+                                        ->whereHas('user')
+                                        ->latest()
+                                        ->take(5)
+                                        ->get();
 
             return view('dashboard.admin', compact(
                 'totalPegawai', 
-                'totalCuti', 
                 'totalPending', 
                 'totalUnitKerja',
-                'pegawaiTerbaru'
+                'cutiTerbaru'
             ));
         }
 
-        // 2. JIKA YANG LOGIN ADALAH PEGAWAI biasa
+        // 2. JIKA YANG LOGIN ADALAH PEGAWAI BIASA
         if ($user->role === 'pegawai') {
-            // Mengambil riwayat pengajuan cuti milik pegawai ini sendiri (maksimal 5 data terbaru)
             $riwayatCuti = PengajuanCuti::where('user_id', $user->id)
                                         ->orderBy('created_at', 'desc')
                                         ->take(5)
@@ -54,7 +50,7 @@ class DashboardController extends Controller
             return view('dashboard.pegawai', compact('user', 'riwayatCuti'));
         }
 
-        // Antisipasi jika ada role asing, lempar ke halaman login
+        // Antisipasi jika ada role asing
         Auth::logout();
         return redirect()->route('login');
     }

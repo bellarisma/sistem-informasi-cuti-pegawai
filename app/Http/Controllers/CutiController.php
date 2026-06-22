@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Mail;
+use App\Mail\NotifikasiCutiMail;
 use Illuminate\Http\Request;
 use App\Models\PengajuanCuti;
 use App\Models\User;
@@ -48,7 +50,7 @@ class CutiController extends Controller
         $request->validate([
             'tanggal_mulai'   => 'required|date|after_or_equal:today',
             'tanggal_selesai' => 'required|date|after_or_equal:tanggal_mulai',
-            'alasan'          => 'required|string|max:255',
+            'alasan'          => 'required|string|min:5',
         ], [
             'tanggal_mulai.after_or_equal' => 'Tanggal mulai tidak boleh hari yang sudah lewat.',
             'tanggal_selesai.after_or_equal' => 'Tanggal selesai harus setelah atau sama dengan tanggal mulai.',
@@ -82,14 +84,21 @@ class CutiController extends Controller
         }
 
         // 5. Simpan Data ke Database
-        PengajuanCuti::create([
+        $cuti = PengajuanCuti::create([
             'user_id'         => $user->id,
             'tanggal_mulai'   => $request->tanggal_mulai,
             'tanggal_selesai' => $request->tanggal_selesai,
             'alasan'          => $request->alasan,
-            'status'          => 'pending', // Default awal pasti pending
+            'status'          => 'pending', 
             'jml_hari_cuti'   => $jumlahHari,
-            ]);
+        ]);
+
+       // Kirim email notifikasi ke Admin menggunakan variabel $cuti
+        $admin = User::where('role', 'admin')->first();
+        if ($admin && $admin->email) {
+            $pesan = "Halo Admin, ada pengajuan cuti baru yang masuk dan memerlukan persetujuan Anda.";
+            Mail::to($admin->email)->send(new NotifikasiCutiMail($cuti, $pesan));
+        }
 
         return redirect()->route('cuti.index')
             ->with('success', 'Pengajuan cuti berhasil dikirim! Silakan tunggu konfirmasi dari Admin.');
@@ -117,11 +126,18 @@ class CutiController extends Controller
         if ($pegawai->sisa_jatah_cuti >= $jumlahHari) {
             $pegawai->decrement('sisa_jatah_cuti', $jumlahHari);
             $cuti->update(['status' => 'disetujui']);
+        
+           // Kirim email (Ganti $pengajuanCuti menjadi $cuti)
+            if ($cuti->user && $cuti->user->email) {
+                $pesan = "Selamat! Pengajuan cuti Anda telah disetujui oleh Admin.";
+                Mail::to($cuti->user->email)->send(new NotifikasiCutiMail($cuti, $pesan));
+            }
+
             return redirect()->back()->with('success', 'Pengajuan cuti berhasil DISETUJUI dan jatah cuti pegawai telah dipotong.');
         }
 
-        return redirect()->back()->with('error', 'Gagal menyetujui! Sisa jatah cuti pegawai tidak mencukupi.');
-    }
+        return redirect()->back()->with('error', 'Gagal menyetujui! Sisa jatah cuti pegawai tidak mencukupi.'); 
+        }
 
     /**
      * Fitur Approval Admin: TOLAK CUTI
@@ -134,7 +150,12 @@ class CutiController extends Controller
             return redirect()->back()->with('error', 'Pengajuan cuti ini sudah diproses sebelumnya!');
         }
 
-        $cuti->update(['status' => 'ditolak']);
+        // Kirim email (Ganti $pengajuanCuti menjadi $cuti)
+        if ($cuti->user && $cuti->user->email) {
+            $pesan = "Mohon maaf, pengajuan cuti Anda ditolak oleh Admin karena alasan operasional.";
+            Mail::to($cuti->user->email)->send(new NotifikasiCutiMail($cuti, $pesan));
+        }
+
         return redirect()->back()->with('success', 'Pengajuan cuti telah DITOLAK.');
     }
 }

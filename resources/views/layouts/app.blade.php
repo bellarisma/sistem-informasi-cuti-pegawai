@@ -129,6 +129,13 @@
             background:rgba(255,255,255,.15);
         }
 
+        .menu a.active {
+            background: rgba(255, 255, 255, 0.25);
+            font-weight: 600;
+            border-left: 4px solid #ffffff;
+            border-radius: 0 10px 10px 0;
+            padding-left: 11px; /* mengimbangi ketebalan border kiri */
+        }
         /* CONTENT */
         .content{
             flex:1;
@@ -305,30 +312,58 @@
             </button>
         </div>
 
-        <ul class="menu">
-    <li><a href="{{ route('dashboard') }}"><i class="fa-solid fa-chart-pie"></i> Dashboard</a></li>
+        <ul class="menu" style="list-style: none; padding: 0; margin: 0;">
+    {{-- 1. Dashboard --}}
+    <li style="margin-bottom: 8px;">
+        <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}" style="font-size: 14px;">
+            <i class="fa-solid fa-chart-pie"></i> Dashboard
+        </a>
+    </li>
     
-    {{-- KHUSUS ADMIN: Menu Pegawai dikunci di sini --}}
+    {{-- 2. Khusus Admin: Menu CRUD Karyawan/Pegawai --}}
     @if(auth()->user()->role == 'admin')
-    <li><a href="{{ route('pegawai.index') }}"><i class="fa-solid fa-users"></i> Pegawai</a></li>
+    <li style="margin-bottom: 8px;">
+        <a href="{{ route('pegawai.index') }}" class="{{ request()->routeIs('pegawai.index*') ? 'active' : '' }}" style="font-size: 14px;">
+            <i class="fa-solid fa-users"></i> Pegawai
+        </a>
+    </li>
     @endif
     
-    {{-- Bisa diakses Admin maupun Pegawai --}}
-    <li><a href="{{ route('cuti.index') }}"><i class="fa-solid fa-calendar-check"></i> Cuti</a></li>
+    {{-- 3. Menu Cuti --}}
+    <li style="margin-bottom: 8px;">
+        <a href="{{ route('cuti.index') }}" class="{{ request()->routeIs('cuti.index*') ? 'active' : '' }}" style="font-size: 14px;">
+            <i class="fa-solid fa-calendar-check"></i> Cuti
+        </a>
+    </li>
     
-    {{-- KHUSUS ADMIN: Menu Laporan --}}
+    {{-- 4. Khusus Admin: Menu Laporan --}}
     @if(auth()->user()->role == 'admin')
-    <li><a href="{{ route('laporan.index') }}"><i class="fa-solid fa-file-invoice"></i> Laporan</a></li>
+    <li style="margin-bottom: 8px;">
+        <a href="{{ route('laporan.index') }}" class="{{ request()->routeIs('laporan.index*') ? 'active' : '' }}" style="font-size: 14px;">
+            <i class="fa-solid fa-file-invoice"></i> Laporan
+        </a>
+    </li>
     @endif
-            <li>
-                <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                    <i class="fa-solid fa-right-from-bracket"></i> Logout
-                </a>
-                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                    @csrf
-                </form>
-            </li>
-        </ul>
+
+    <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.2); margin: 15px 0;">
+    
+    {{-- 5. Pengaturan Profil (Ukurannya disamakan 14px biar gak gede sendiri) --}}
+    <li style="margin-bottom: 8px;">
+        <a href="{{ route('profil.edit') }}" class="{{ request()->routeIs('profil.edit') ? 'active' : '' }}" style="font-size: 14px;">
+            <i class="fa-solid fa-user-gear"></i> Pengaturan Profil
+        </a>
+    </li>
+
+    {{-- 6. Logout --}}
+    <li>
+        <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" style="font-size: 14px;">
+            <i class="fa-solid fa-right-from-bracket"></i> Logout
+        </a>
+        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+            @csrf
+        </form>
+    </li>
+</ul>
     </aside>
 
     <div class="content" id="content">
@@ -355,6 +390,9 @@
         floatingToggle.style.display = 'none';
     });
 </script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 @yield('scripts')
 
