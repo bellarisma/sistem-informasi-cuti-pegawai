@@ -1,64 +1,113 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# EMS - Sistem Informasi Cuti Pegawai
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+**EMS** (Employee Management System) adalah aplikasi berbasis web yang dirancang untuk memodernisasi dan mengelola data pegawai serta proses pengajuan cuti secara efisien dan terstruktur. Project ini dibangun menggunakan **Laravel 12** dan **MySQL** sebagai bagian dari portofolio *fullstack web development*.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🚀 Fitur Utama
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### 👤 Role Pegawai
+* **Dashboard Pegawai:** 
+  * Menampilkan informasi ringkas sisa jatah cuti yang dimiliki.
+  * Tombol akses cepat *Ajukan Cuti Baru*.
+  * Tabel riwayat 5 Pengajuan Cuti Terakhir lengkap dengan tanggal, alasan, dan status approval (*Pending*, *Disetujui*, *Ditolak*).
+* **Pengajuan Cuti Online:**
+  * **Formulir Cuti Baru:** Mengisi tanggal mulai, tanggal selesai, dan alasan permohonan cuti secara mandiri.
+  * Informasi indikator sisa jatah cuti aktif di dalam formulir.
+  * **Tabel Riwayat Cuti:** Melihat seluruh histori permohonan cuti beserta durasi hari dan statusnya.
+  * **Notifikasi Email:** Menerima email notifikasi otomatis berisi rincian data dan perubah status permohonan cuti (*Pending*, *Disetujui*, atau *Ditolak*).
+* **Pengaturan Profil Akun:** 
+  * Melihat data diri (nama lengkap, email, divisi, dan sisa jatah cuti).
+  * Fitur memperbarui informasi profil dan **Ganti Password**.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+### 👨‍💼 Role Admin (Manajemen Sistem)
+* **Dashboard Monitoring:** Menampilkan statistik *real-time* seperti total karyawan, jumlah pengajuan yang perlu persetujuan, total divisi aktif, dan ringkasan aktivitas pengajuan cuti terbaru seluruh karyawan.
+* **Manajemen Data Pengguna (CRUD):** 
+  * Mengelola **Daftar Pegawai** (melihat email, divisi, sisa jatah cuti, serta opsi edit/hapus).
+  * Mengelola **Daftar Administrator Sistem** beserta hak aksesnya.
+  * Fitur untuk menambah data pegawai baru dan admin baru.
+* **Manajemen Cuti (Approval System):**
+  * Memproses permohonan cuti pegawai dengan aksi **Setujui** atau **Tolak**.
+  * Menampilkan riwayat pengajuan lengkap dengan tanggal mulai/selesai, alasan, jumlah hari, sisa jatah cuti, dan status pengajuan.
+  * **Email Notification System:** Mengirimkan email notifikasi otomatis ke pegawai saat permohonan cuti selesai diproses.
+* **Laporan Rekap Cuti Pegawai:**
+  * Filter riwayat cuti berdasarkan rentang tanggal (*Tanggal Mulai* & *Tanggal Selesai*) dan *Divisi*.
+  * Fitur **Cetak PDF / Print** untuk pembuatan laporan rekapitulasi data pengajuan cuti seluruh karyawan.
+* **Pengaturan Profil Akun Admin:** Mengubah informasi pribadi dan pembaruan password akun admin.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+---
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 🛠️ Teknologi yang Digunakan
 
-## Laravel Sponsors
+* **Framework Back-End:** [Laravel 12](https://laravel.com/) (PHP)
+* **Database:** MySQL
+* **Front-End:** Blade Templating, HTML5, CSS3, JavaScript
+* **Authentication:** Multi-role Access Control (Admin & Pegawai)
+* **Email Engine:** Laravel Mail (Custom HTML Template & Local Log Driver)
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+---
 
-### Premium Partners
+## ⚙️ Panduan Instalasi (Local Development)
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+Ikuti langkah-langkah berikut untuk menjalankan project ini di komputer lokal:
 
-## Contributing
+1. **Clone Repositori**
+   ```bash
+   git clone https://github.com/bellarisma/sistem-informasi-cuti-pegawai.git
+   cd sistem-informasi-cuti-pegawai
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```
 
-## Code of Conduct
+2. **Install Dependensi PHP**
+```bash
+composer install
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```
 
-## Security Vulnerabilities
+3. **Konfigurasi Environment (.env)**
+Salin file `.env.example` menjadi `.env`:
+```bash
+cp .env.example .env
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```
 
-## License
+Atur koneksi database pada file `.env`:
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=ems_system
+DB_USERNAME=root
+DB_PASSWORD=
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```
+
+4. **Generate Application Key**
+```bash
+php artisan key:generate
+
+```
+
+5. **Jalankan Migrasi Database & Seeder**
+```bash
+php artisan migrate --seed
+
+```
+
+6. **Jalankan Server Lokal**
+```bash
+php artisan serve
+
+```
+
+Buka browser dan akses `[http://127.0.0.1:8000](http://127.0.0.1:8000)`.
+
+---
+
+## 👤 Penulis
+
+* **Bella Risma** - *Fullstack Developer* - [GitHub Profile](https://www.google.com/search?q=https://github.com/bellarisma)
+
+```
